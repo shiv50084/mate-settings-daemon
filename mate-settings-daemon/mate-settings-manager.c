@@ -368,7 +368,7 @@ mate_settings_manager_awake_handler (OrgMateSettingsDaemon *object,
 gboolean
 mate_settings_manager_start_handler (OrgMateSettingsDaemon *object,
                                      GDBusMethodInvocation *invocation,
-                                     gpointer               user_data G_GNUC_UNUSED)
+                                     gpointer               user_data)
 {
         gboolean ret;
         GError *error = NULL;
@@ -376,7 +376,7 @@ mate_settings_manager_start_handler (OrgMateSettingsDaemon *object,
 
         g_debug ("Starting settings manager");
 
-        manager = MATE_SETTINGS_MANAGER (object);
+        manager = MATE_SETTINGS_MANAGER (user_data);
 
         mate_settings_profile_start (NULL);
 
@@ -450,9 +450,13 @@ bus_acquired_handler_cb (GDBusConnection *connection,
 static void
 name_lost_handler_cb (GDBusConnection *connection G_GNUC_UNUSED,
                       const gchar     *name G_GNUC_UNUSED,
-                      gpointer         user_data G_GNUC_UNUSED)
+                      gpointer         user_data)
 {
-        g_debug ("bus name lost\n");
+        MateSettingsManager *manager;
+        g_debug ("msd bus name lost\n");
+
+        manager = MATE_SETTINGS_MANAGER (user_data);
+        mate_settings_manager_stop (manager);
         gtk_main_quit ();
 }
 
