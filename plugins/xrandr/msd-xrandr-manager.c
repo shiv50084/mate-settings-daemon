@@ -2750,15 +2750,6 @@ bus_acquired_handler_cb (GDBusConnection *connection,
 }
 
 static void
-name_lost_handler_cb (GDBusConnection *connection G_GNUC_UNUSED,
-                      const gchar     *name G_GNUC_UNUSED,
-                      gpointer         user_data G_GNUC_UNUSED)
-{
-        g_debug("bus name lost\n");
-        gtk_main_quit ();
-}
-
-static void
 msd_xrandr_manager_constructed (GObject *object)
 {
         MsdXrandrManager *manager;
@@ -2772,7 +2763,7 @@ msd_xrandr_manager_constructed (GObject *object)
                                                      G_BUS_NAME_OWNER_FLAGS_NONE,
                                                      bus_acquired_handler_cb,
                                                      NULL,
-                                                     name_lost_handler_cb,
+                                                     NULL,
                                                      manager,
                                                      NULL);
 }
